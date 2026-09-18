@@ -2,159 +2,179 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>DON'T TAP RED — V-2</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>DON'T TAP RED — V-4</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+html,body{
+margin:0;width:100%;height:100%;overflow:hidden;
+font-family:Arial,sans-serif;background:#02040a;color:white;
+touch-action:manipulation
 }
 
-body {
-    margin: 0;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
-    background: #111;
-    color: white;
-    touch-action: manipulation;
+#game{
+position:relative;width:100vw;height:100vh;overflow:hidden;
+background:radial-gradient(circle at 50% 45%,#24364a,#0b111c 45%,#02040a);
 }
 
-#game {
-    width: 100vw;
-    height: 100vh;
-    position: relative;
-    overflow: hidden;
-    background: radial-gradient(circle at center, #252525, #080808);
+#game:before{
+content:"";position:absolute;width:180vw;height:180vw;
+left:-40vw;top:-40vw;border-radius:50%;
+background:repeating-radial-gradient(circle,
+rgba(100,180,255,.035) 0 2px,transparent 2px 34px);
+animation:rotate 28s linear infinite
 }
 
-#top {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 10;
-    font-weight: bold;
+@keyframes rotate{to{transform:rotate(360deg)}}
+
+.star{
+position:absolute;width:3px;height:3px;background:white;border-radius:50%;
+opacity:.5;animation:twinkle 2s infinite alternate
+}
+@keyframes twinkle{from{opacity:.15}to{opacity:.8}}
+
+#top{
+position:absolute;top:0;left:0;width:100%;padding:10px;
+display:flex;gap:6px;z-index:20
 }
 
-.stat {
-    background: rgba(0,0,0,.55);
-    padding: 8px 12px;
-    border-radius: 12px;
-    font-size: 16px;
+.stat{
+flex:1;text-align:center;padding:7px 3px;
+border:1px solid rgba(255,255,255,.14);border-radius:13px;
+background:rgba(0,0,0,.55);backdrop-filter:blur(8px);
+font-size:11px;font-weight:bold
 }
 
-#message {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    text-align: center;
-    z-index: 20;
+.stat span{font-size:18px}
+
+#soundBtn{
+position:absolute;right:10px;top:65px;z-index:30;
+width:42px;height:42px;padding:0;border-radius:50%;
+background:rgba(255,255,255,.12);color:white;
+border:1px solid rgba(255,255,255,.2);font-size:19px
 }
 
-#message h1 {
-    margin: 0 0 10px;
-    font-size: clamp(34px, 10vw, 64px);
-    letter-spacing: 2px;
+#message{
+position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+width:94%;text-align:center;z-index:25
 }
 
-#message p {
-    font-size: 18px;
-    opacity: .8;
+#message h1{
+margin:0 0 8px;font-size:clamp(34px,10vw,62px);
+letter-spacing:2px;text-shadow:0 0 25px rgba(255,255,255,.3)
 }
 
-button {
-    border: 0;
-    padding: 15px 30px;
-    border-radius: 15px;
-    background: white;
-    color: #111;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
+#message p{font-size:16px;opacity:.8}
+
+button{
+border:0;padding:15px 30px;border-radius:15px;
+background:white;color:#111;font-size:18px;font-weight:bold;
+box-shadow:0 8px 25px rgba(0,0,0,.4)
 }
 
-#playArea {
-    position: absolute;
-    inset: 75px 0 0 0;
+button:active{transform:scale(.92)}
+
+#playArea{
+position:absolute;inset:78px 0 0;z-index:5
 }
 
-.tile {
-    position: absolute;
-    width: 74px;
-    height: 74px;
-    border-radius: 18px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,.35);
-    user-select: none;
+.tile{
+position:absolute;width:70px;height:70px;border-radius:19px;
+display:flex;align-items:center;justify-content:center;
+font-weight:bold;font-size:17px;user-select:none;
+animation:pop .18s ease-out
 }
 
-.safe {
-    background: #eeeeee;
-    color: #111;
+@keyframes pop{
+0%{transform:scale(.45);opacity:0}
+70%{transform:scale(1.08)}
+100%{transform:scale(1);opacity:1}
 }
 
-.red {
-    background: #e21b23;
-    color: white;
-    box-shadow: 0 0 22px rgba(255,0,0,.65);
+.safe{
+background:linear-gradient(145deg,#fff,#b9c4cf);color:#111;
+box-shadow:0 8px 24px rgba(0,0,0,.45),inset 0 2px 3px white
 }
 
-.pop {
-    animation: pop .18s ease-out;
+.red{
+background:linear-gradient(145deg,#ff5050,#a50000);color:white;
+box-shadow:0 0 14px red,0 0 34px rgba(255,0,0,.55)
 }
 
-@keyframes pop {
-    0% { transform: scale(.7); opacity: .3; }
-    100% { transform: scale(1); opacity: 1; }
+.coin{
+background:linear-gradient(145deg,#fff36b,#e69b00);
+color:#4b2900;
+box-shadow:0 0 14px #ffd000,0 0 30px rgba(255,190,0,.5)
 }
 
-.shake {
-    animation: shake .3s;
+.bonus{
+background:linear-gradient(145deg,#d8a7ff,#6d20d9);
+color:white;
+box-shadow:0 0 15px #a646ff,0 0 35px rgba(160,50,255,.6)
 }
 
-@keyframes shake {
-    0%,100% { transform: translateX(0); }
-    25% { transform: translateX(-12px); }
-    75% { transform: translateX(12px); }
+.particle{
+position:absolute;width:7px;height:7px;border-radius:50%;
+pointer-events:none;z-index:45;
+animation:particle .65s ease-out forwards
 }
 
-#gameOver {
-    display: none;
-    position: absolute;
-    inset: 0;
-    z-index: 50;
-    background: rgba(0,0,0,.86);
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 25px;
+@keyframes particle{
+to{transform:translate(var(--x),var(--y)) scale(0);opacity:0}
 }
 
-#gameOver h2 {
-    font-size: 42px;
-    margin: 0 0 10px;
+.float{
+position:absolute;z-index:50;pointer-events:none;
+font-size:23px;font-weight:bold;
+animation:float .75s ease-out forwards
 }
 
-#finalScore {
-    font-size: 28px;
-    margin: 10px 0 22px;
+@keyframes float{
+to{transform:translateY(-70px) scale(1.2);opacity:0}
 }
 
-.small {
-    font-size: 13px;
-    opacity: .6;
-    margin-top: 18px;
+#levelUp{
+display:none;position:absolute;top:40%;left:50%;
+transform:translate(-50%,-50%);z-index:60;
+font-size:34px;font-weight:bold;text-align:center;
+text-shadow:0 0 25px #9b5cff;
+animation:level .8s ease-out
+}
+
+@keyframes level{
+0%{transform:translate(-50%,-50%) scale(.5);opacity:0}
+50%{transform:translate(-50%,-50%) scale(1.2);opacity:1}
+100%{transform:translate(-50%,-50%) scale(1);opacity:0}
+}
+
+#gameOver{
+display:none;position:absolute;inset:0;z-index:55;
+background:rgba(0,0,0,.9);backdrop-filter:blur(8px);
+justify-content:center;align-items:center;text-align:center
+}
+
+#gameOver h2{
+font-size:44px;margin:0 0 10px;
+text-shadow:0 0 25px red
+}
+
+#finalScore{font-size:28px;margin:10px}
+#finalCoins{font-size:20px;margin-bottom:22px;opacity:.85}
+
+#flash{
+position:absolute;inset:0;background:red;opacity:0;
+pointer-events:none;z-index:54
+}
+
+.flash{animation:flash .35s}
+@keyframes flash{from{opacity:.45}to{opacity:0}}
+
+.shake{animation:shake .3s}
+@keyframes shake{
+25%{transform:translateX(-12px)}
+75%{transform:translateX(12px)}
 }
 </style>
 </head>
@@ -163,173 +183,364 @@ button {
 
 <div id="game">
 
-    <div id="top">
-        <div class="stat">SCORE: <span id="score">0</span></div>
-        <div class="stat">BEST: <span id="best">0</span></div>
-        <div class="stat">TIME: <span id="time">30</span></div>
-    </div>
+<div id="top">
+<div class="stat">SCORE<br><span id="score">0</span></div>
+<div class="stat">BEST<br><span id="best">0</span></div>
+<div class="stat">TIME<br><span id="time">30</span></div>
+<div class="stat">LEVEL<br><span id="level">1</span></div>
+<div class="stat">🪙<br><span id="coins">0</span></div>
+</div>
 
-    <div id="message">
-        <h1>DON'T TAP RED</h1>
-        <p>Tap the safe tiles. Avoid RED.</p>
-        <button id="startBtn">PLAY V-2</button>
-        <div class="small">Android Touch Edition</div>
-    </div>
+<button id="soundBtn">🔊</button>
 
-    <div id="playArea"></div>
+<div id="message">
+<h1>DON'T TAP RED</h1>
+<p>Tap SAFE • Collect COINS • Avoid RED</p>
+<button id="startBtn">PLAY</button>
+<div style="font-size:13px;opacity:.6;margin-top:18px">
+V-4 • Ultimate Touch Edition
+</div>
+</div>
 
-    <div id="gameOver">
-        <div>
-            <h2>GAME OVER</h2>
-            <div id="finalScore">Score: 0</div>
-            <button id="restartBtn">PLAY AGAIN</button>
-        </div>
-    </div>
+<div id="playArea"></div>
+<div id="levelUp">LEVEL UP!</div>
+<div id="flash"></div>
+
+<div id="gameOver">
+<div>
+<h2>GAME OVER</h2>
+<div id="finalScore">Score: 0</div>
+<div id="finalCoins">🪙 Coins: 0</div>
+<button id="restartBtn">PLAY AGAIN</button>
+</div>
+</div>
 
 </div>
 
 <script>
-const playArea = document.getElementById("playArea");
-const scoreEl = document.getElementById("score");
-const bestEl = document.getElementById("best");
-const timeEl = document.getElementById("time");
-const message = document.getElementById("message");
-const gameOver = document.getElementById("gameOver");
-const finalScore = document.getElementById("finalScore");
-const game = document.getElementById("game");
+const playArea=document.getElementById("playArea");
+const scoreEl=document.getElementById("score");
+const bestEl=document.getElementById("best");
+const timeEl=document.getElementById("time");
+const levelEl=document.getElementById("level");
+const coinsEl=document.getElementById("coins");
+const message=document.getElementById("message");
+const gameOver=document.getElementById("gameOver");
+const finalScore=document.getElementById("finalScore");
+const finalCoins=document.getElementById("finalCoins");
+const levelUp=document.getElementById("levelUp");
+const flash=document.getElementById("flash");
+const game=document.getElementById("game");
+const soundBtn=document.getElementById("soundBtn");
 
-let score = 0;
-let best = Number(localStorage.getItem("dontTapRedBest") || 0);
-let time = 30;
-let running = false;
-let timer = null;
-let spawnTimer = null;
+let score=0;
+let coins=0;
+let best=Number(localStorage.getItem("dontTapRedBest")||0);
+let savedCoins=Number(localStorage.getItem("dontTapRedCoins")||0);
+let time=30;
+let level=1;
+let running=false;
+let timer=null;
+let spawnTimer=null;
+let soundOn=true;
+let audio=null;
+let musicTimer=null;
 
-bestEl.textContent = best;
+bestEl.textContent=best;
+coinsEl.textContent=savedCoins;
 
-function random(min, max) {
-    return Math.random() * (max - min) + min;
+function initAudio(){
+if(!audio)audio=new(window.AudioContext||window.webkitAudioContext)();
+if(audio.state==="suspended")audio.resume();
 }
 
-function createTile() {
-    if (!running) return;
+function tone(freq,duration=.1,type="sine",volume=.06){
+if(!soundOn)return;
+initAudio();
 
-    const tile = document.createElement("div");
-    tile.className = "tile pop";
+let o=audio.createOscillator();
+let g=audio.createGain();
 
-    const isRed = Math.random() < Math.min(.18 + score / 250, .42);
+o.type=type;
+o.frequency.value=freq;
+g.gain.setValueAtTime(volume,audio.currentTime);
+g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+duration);
 
-    if (isRed) {
-        tile.classList.add("red");
-        tile.textContent = "RED";
-    } else {
-        tile.classList.add("safe");
-        tile.textContent = "TAP";
-    }
-
-    const maxX = Math.max(5, playArea.clientWidth - 79);
-    const maxY = Math.max(5, playArea.clientHeight - 79);
-
-    tile.style.left = random(5, maxX) + "px";
-    tile.style.top = random(5, maxY) + "px";
-
-    tile.addEventListener("pointerdown", function(e) {
-        e.preventDefault();
-
-        if (!running) return;
-
-        if (tile.classList.contains("red")) {
-            endGame();
-        } else {
-            score++;
-            scoreEl.textContent = score;
-
-            if (score > best) {
-                best = score;
-                bestEl.textContent = best;
-                localStorage.setItem("dontTapRedBest", best);
-            }
-
-            tile.remove();
-
-            if (score % 5 === 0) {
-                navigator.vibrate?.(25);
-            }
-
-            createTile();
-        }
-    });
-
-    playArea.appendChild(tile);
-
-    setTimeout(() => {
-        if (tile.parentNode) tile.remove();
-    }, Math.max(700, 1500 - score * 12));
+o.connect(g);
+g.connect(audio.destination);
+o.start();
+o.stop(audio.currentTime+duration);
 }
 
-function startGame() {
-    score = 0;
-    time = 30;
-    running = true;
+function startMusic(){
+if(!soundOn||musicTimer)return;
 
-    scoreEl.textContent = "0";
-    timeEl.textContent = time;
+const notes=[262,330,392,330,294,349,440,349];
+let i=0;
 
-    message.style.display = "none";
-    gameOver.style.display = "none";
-
-    playArea.innerHTML = "";
-
-    for (let i = 0; i < 4; i++) {
-        createTile();
-    }
-
-    clearInterval(timer);
-    clearInterval(spawnTimer);
-
-    timer = setInterval(() => {
-        time--;
-        timeEl.textContent = time;
-
-        if (time <= 0) {
-            endGame();
-        }
-    }, 1000);
-
-    spawnTimer = setInterval(() => {
-        createTile();
-
-        if (score > 15) {
-            createTile();
-        }
-    }, 850);
+musicTimer=setInterval(()=>{
+if(running)tone(notes[i++%notes.length],.22,"triangle",.025);
+},300);
 }
 
-function endGame() {
-    if (!running) return;
-
-    running = false;
-
-    clearInterval(timer);
-    clearInterval(spawnTimer);
-
-    playArea.innerHTML = "";
-
-    finalScore.textContent = "Score: " + score;
-    gameOver.style.display = "flex";
-
-    game.classList.add("shake");
-
-    navigator.vibrate?.([100, 60, 100]);
-
-    setTimeout(() => {
-        game.classList.remove("shake");
-    }, 350);
+function stopMusic(){
+clearInterval(musicTimer);
+musicTimer=null;
 }
 
-document.getElementById("startBtn").addEventListener("click", startGame);
-document.getElementById("restartBtn").addEventListener("click", startGame);
+function soundTap(){
+tone(520,.07);
+setTimeout(()=>tone(760,.08),40);
+}
+
+function soundCoin(){
+tone(880,.08);
+setTimeout(()=>tone(1320,.12),70);
+}
+
+function soundBonus(){
+tone(500,.08);
+setTimeout(()=>tone(800,.08),70);
+setTimeout(()=>tone(1200,.15),140);
+}
+
+function soundGameOver(){
+tone(150,.25,"sawtooth",.12);
+setTimeout(()=>tone(90,.35,"sawtooth",.1),100);
+}
+
+function soundLevel(){
+tone(523,.1);
+setTimeout(()=>tone(659,.1),100);
+setTimeout(()=>tone(784,.1),200);
+setTimeout(()=>tone(1046,.2),300);
+}
+
+function particles(tile){
+let rect=tile.getBoundingClientRect();
+let parent=playArea.getBoundingClientRect();
+
+let cx=rect.left-parent.left+35;
+let cy=rect.top-parent.top+35;
+
+for(let i=0;i<12;i++){
+let p=document.createElement("div");
+p.className="particle";
+p.style.left=cx+"px";
+p.style.top=cy+"px";
+
+let a=Math.random()*Math.PI*2;
+let d=35+Math.random()*55;
+
+p.style.setProperty("--x",Math.cos(a)*d+"px");
+p.style.setProperty("--y",Math.sin(a)*d+"px");
+
+playArea.appendChild(p);
+setTimeout(()=>p.remove(),700);
+}
+}
+
+function floating(text,tile){
+let f=document.createElement("div");
+f.className="float";
+f.textContent=text;
+f.style.left=tile.style.left;
+f.style.top=tile.style.top;
+playArea.appendChild(f);
+setTimeout(()=>f.remove(),750);
+}
+
+function createTile(){
+if(!running)return;
+
+let tile=document.createElement("div");
+tile.className="tile";
+
+let r=Math.random();
+let redChance=Math.min(.16+level*.025,.38);
+
+if(r<redChance){
+tile.classList.add("red");
+tile.textContent="RED";
+}else if(r<redChance+.10){
+tile.classList.add("coin");
+tile.textContent="🪙";
+}else if(r<redChance+.15){
+tile.classList.add("bonus");
+tile.textContent="★";
+}else{
+tile.classList.add("safe");
+tile.textContent="TAP";
+}
+
+let maxX=Math.max(5,playArea.clientWidth-75);
+let maxY=Math.max(5,playArea.clientHeight-75);
+
+tile.style.left=Math.random()*maxX+"px";
+tile.style.top=Math.random()*maxY+"px";
+
+tile.addEventListener("pointerdown",e=>{
+e.preventDefault();
+if(!running)return;
+
+if(tile.classList.contains("red")){
+soundGameOver();
+endGame();
+return;
+}
+
+particles(tile);
+
+if(tile.classList.contains("coin")){
+coins++;
+coinsEl.textContent=coins;
+localStorage.setItem("dontTapRedCoins",coins);
+floating("+1 🪙",tile);
+soundCoin();
+}else if(tile.classList.contains("bonus")){
+score+=3;
+floating("+3 ⭐",tile);
+soundBonus();
+}else{
+score++;
+floating("+1",tile);
+soundTap();
+}
+
+scoreEl.textContent=score;
+
+if(score>best){
+best=score;
+bestEl.textContent=best;
+localStorage.setItem("dontTapRedBest",best);
+}
+
+let newLevel=Math.floor(score/10)+1;
+
+if(newLevel>level){
+level=newLevel;
+levelEl.textContent=level;
+levelUp.textContent="LEVEL "+level+"!";
+levelUp.style.display="block";
+levelUp.style.animation="none";
+void levelUp.offsetWidth;
+levelUp.style.animation="level .8s ease-out";
+soundLevel();
+
+setTimeout(()=>{
+levelUp.style.display="none";
+},800);
+}
+
+tile.remove();
+
+if(navigator.vibrate)navigator.vibrate(
+tile.classList.contains("bonus")?[20,30,20]:10
+);
+
+createTile();
+});
+
+playArea.appendChild(tile);
+
+let life=Math.max(500,1500-level*80);
+setTimeout(()=>{
+if(tile.parentNode)tile.remove();
+},life);
+}
+
+function startGame(){
+initAudio();
+startMusic();
+
+score=0;
+coins=savedCoins;
+time=30;
+level=1;
+running=true;
+
+scoreEl.textContent=0;
+coinsEl.textContent=coins;
+timeEl.textContent=30;
+levelEl.textContent=1;
+
+message.style.display="none";
+gameOver.style.display="none";
+playArea.innerHTML="";
+
+for(let i=0;i<4;i++)createTile();
+
+clearInterval(timer);
+clearInterval(spawnTimer);
+
+timer=setInterval(()=>{
+time--;
+timeEl.textContent=time;
+
+if(time<=0)endGame();
+},1000);
+
+spawnTimer=setInterval(()=>{
+createTile();
+
+if(level>=3)createTile();
+if(level>=6)createTile();
+
+},Math.max(450,850-level*35));
+}
+
+function endGame(){
+if(!running)return;
+
+running=false;
+clearInterval(timer);
+clearInterval(spawnTimer);
+stopMusic();
+
+playArea.innerHTML="";
+
+finalScore.textContent="Score: "+score;
+finalCoins.textContent="🪙 Coins: "+coins;
+
+gameOver.style.display="flex";
+
+game.classList.add("shake");
+flash.classList.add("flash");
+
+if(navigator.vibrate)
+navigator.vibrate([100,60,100]);
+
+setTimeout(()=>{
+game.classList.remove("shake");
+flash.classList.remove("flash");
+},400);
+}
+
+soundBtn.addEventListener("click",()=>{
+soundOn=!soundOn;
+soundBtn.textContent=soundOn?"🔊":"🔇";
+
+if(soundOn){
+initAudio();
+tone(700,.1);
+if(running)startMusic();
+}else{
+stopMusic();
+}
+});
+
+document.getElementById("startBtn").addEventListener("click",startGame);
+document.getElementById("restartBtn").addEventListener("click",startGame);
+
+for(let i=0;i<25;i++){
+let s=document.createElement("div");
+s.className="star";
+s.style.left=Math.random()*100+"%";
+s.style.top=Math.random()*100+"%";
+s.style.animationDelay=Math.random()*2+"s";
+game.appendChild(s);
+}
 </script>
 
 </body>
-  </html>
+</html>
